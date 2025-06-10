@@ -12,14 +12,17 @@ import Login from "./Components/Login/Login";
 
 function App() {
   return (
-    <div style={{ height: '100vh', width: '100vw' }}>
+    <div style={{ height: "100vh", width: "100vw" }}>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/footer" element={<Footer />} />
         <Route path="/ask-questions" element={<AskQuestions />} />
-        <Route path="/question-detail" element={<QuestionDetail />} />
+        <Route
+          path="/question-detail/:question_id/:user_id"
+          element={<QuestionDetail />}
+        />
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/sign-up" element={<SignUp />} />

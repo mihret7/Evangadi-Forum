@@ -29,7 +29,7 @@ function QuestionDetailAndAnswer() {
     setError(null);
 
     axios
-      .post("/user/answer", answer, {
+      .post("/users/answer", answer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +57,7 @@ function QuestionDetailAndAnswer() {
     setLoading(true);
     setError(null);
     axios
-      .get(`/user/getAllAnswers/${question_id}`, {
+      .get(`/users/getAllAnswers/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,7 +77,7 @@ function QuestionDetailAndAnswer() {
     setLoading(true);
     setError(null);
     axios
-      .get(`/user/getQuestionDetail/${question_id}`, {
+      .get(`/users/getQuestionDetail/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,9 +104,9 @@ function QuestionDetailAndAnswer() {
   if (response) {
     return (
       <div className={styles.success__msg}>
-        <h1 className={styles.thanks_note}>{response.messageToTheFront}</h1>
-        <Link className={styles.nav_to} to={response.navigation}>
-          {response.messageToUser}
+        <h1 className={styles.thanks_note}>{response.message}</h1>
+        <Link className={styles.nav_to} to={"/home"}>
+          {"Go to home"}
         </Link>
       </div>
     );

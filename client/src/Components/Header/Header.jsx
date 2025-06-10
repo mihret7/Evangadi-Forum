@@ -21,7 +21,9 @@ const Header = () => {
         <Link to="#">How it works</Link>
       </nav>
 
-      <button className="sign-in-btn">SIGN IN</button>
+      <Link to="/landing">
+        <button className="sign-in-btn">SIGN IN</button>
+      </Link>
 
       <div className="menu-toggle" onClick={toggleMobile}>
         &#9776;

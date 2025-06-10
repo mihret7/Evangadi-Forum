@@ -24,7 +24,7 @@ function Home() {
         <div className={styles.homepage_container}>
           <div className={styles.upper_section}>
             <div className={styles.title}>
-              <Link to="/" className={styles.btn}>
+              <Link to="/ask-questions" className={styles.btn}>
                 <p>Ask Question</p>
               </Link>
               {/* get user name from state */}
@@ -34,7 +34,7 @@ function Home() {
           </div>
           {questions.map((q) => (
             <Link
-              to={`/question-detail/${q.question_id}`}
+              to={`/question-detail/${q.question_id}/${q.user_id}`}
               className={styles.link_container}
             >
               <div key={q.question_id}>
