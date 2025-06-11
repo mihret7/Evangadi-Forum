@@ -8,6 +8,7 @@ import LayOut from "../../Components/Layout/Layout";
 
 function QuestionDetailAndAnswer() {
   const token = localStorage.getItem("token");
+  console.log(token)
   const { question_id, user_id } = useParams();
 
   const [answer, setAnswer] = useState({
@@ -21,7 +22,7 @@ function QuestionDetailAndAnswer() {
   const [error, setError] = useState(null);
 
   const [answersForQuestion, setAllQuestionAnswers] = useState([]);
-  const [questionDetail, setQuestionDetail] = useState(null); 
+  const [questionDetail, setQuestionDetail] = useState({}); 
 
   const submitAnswer = (e) => {
     e.preventDefault();
@@ -77,14 +78,14 @@ function QuestionDetailAndAnswer() {
     setLoading(true);
     setError(null);
     axios
-      .get(`/users/getQuestionDetail/${question_id}`, {
+      .get(`/users/question/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setQuestionDetail(res.data);
+        console.log(res.data.question);
+        setQuestionDetail(res.data.question);
       })
       .catch(() => {
         setError("Failed to load question detail. Please try again.");
@@ -120,8 +121,8 @@ function QuestionDetailAndAnswer() {
 
           {questionDetail ? (
             <>
-              <p className={styles.Qtitle}>{questionDetail.question_title}</p>
-              <p>{questionDetail.question_description}</p>
+              <p className={styles.Qtitle}>{questionDetail?.question_title}</p>
+              <p>{questionDetail?.question_description}</p>
             </>
           ) : (
             <p>Loading question...</p>

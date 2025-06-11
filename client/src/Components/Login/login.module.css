@@ -136,6 +136,45 @@
   cursor: pointer;
 }
 
+
+.msg {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #e6ffed; 
+  border: 2px solid #2ecc71; 
+  border-radius: 20px;
+  text-align: center;
+  color: #2ecc71;
+  font-weight: 600;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+}
+
+
+.note {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+
+.nav_to {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 25px;
+  color: #fff;
+  background-color: var(--primary);
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.nav_to:hover {
+  background-color: var(--accent);
+}
+
+
 /* Responsive adjustments for the login box */
 @media (max-width: 768px) {
   .loginContainer {

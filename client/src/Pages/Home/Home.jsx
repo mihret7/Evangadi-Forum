@@ -1,23 +1,58 @@
 import React from "react";
 import styles from "./home.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "../../Utility/axios";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import LayOut from "../../Components/Layout/Layout"
+import { UserContext } from "../../Components/Context/userContext";
 
 function Home() {
+  const token = localStorage.getItem("token");
+  console.log(token);
+  const [userData, setUserData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
+  const [userProfile, setUserProfile] = useState([]);
+  const navigate = useNavigate()
+
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     axios
-      .get("users/all-question")
+      .get("/users/user-profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((data) => {
+        console.log(data.data.profile)
+        setUserProfile(data.data.profile);
+        return axios.get("/users/all-question", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
       .then((res) => {
-        console.log(res.data.question);
         setQuestions(res.data.question);
       })
-      .catch((err) => console.error("Failed to fetch questions:", err));
+      .catch((err) => {
+        console.error("Failed to fetch data:", err);
+        // logout on error
+        localStorage.removeItem("token");
+        navigate("/landing");
+      });
   }, []);
+  
+  
+
+
+
+
+
+
   return (
     <LayOut>
       <section className={styles.main_container}>
@@ -28,7 +63,7 @@ function Home() {
                 <p>Ask Question</p>
               </Link>
               {/* get user name from state */}
-              <p>Welcome: username</p>
+              <p>Welcome: {userProfile[0]?.user_name}</p>
             </div>
             <h1 className={styles.questions_list}>Questions</h1>
           </div>
