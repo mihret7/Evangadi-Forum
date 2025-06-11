@@ -7,14 +7,19 @@ import LayOut from "../../Components/Layout/Layout";
 function Landing() {
   return (
     <LayOut>
-      <div className={styles.landingPageContainer}>
-        <div className={styles.login}>
+      <div className={styles.pageContainer}>
+      <main className={styles.mainContent}>
+        {/* Login Form Section */}
+        <section className={styles.loginSection}>
           <Login />
-        </div>
-        <div className={styles.about}>
+        </section>
+
+        {/* About Section */}
+        <section className={styles.aboutSection}>
           <About />
-        </div>
-      </div>
+        </section>
+      </main>
+    </div>
     </LayOut>
   );
 }

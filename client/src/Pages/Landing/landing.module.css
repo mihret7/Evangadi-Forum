@@ -1,26 +1,57 @@
-.title {
-  color: var(--text-dark);
-  font-size: 2rem;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.landingPageContainer {
+/* This is the main wrapper that centers everything on the page */
+.pageContainer {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem; 
-  padding: 20px;
-  height: 100vh; 
-  box-sizing: border-box;
-  background-color: aliceblue;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh; 
+  padding: 40px 20px; 
+  background-color: #f5f7f9; 
+  width: 100%;
 }
 
-.login, .about {
+/* This container holds the two columns (Login and About) */
+.mainContent {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  gap: 70px; 
+  width: 100%;
+  max-width: 1150px; 
+  flex-wrap: wrap; 
+}
+
+/* Flex properties for the individual sections */
+.loginSection {
   flex: 1; 
-  max-width: 50%;
-  border-radius: 8px;
+  display: flex;
+  justify-content: flex-end; 
 }
 
-.login {
-  position: relative;
+.aboutSection {
+  flex: 1.2; 
+  display: flex;
+  justify-content: flex-start; 
+}
+
+/* === RESPONSIVE STYLES === */
+
+/* For tablets and mobile devices */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 20px;
+    align-items: flex-start; 
+  }
+
+  .mainContent {
+    flex-direction: column; 
+    gap: 50px; 
+  }
+
+  .loginSection,
+  .aboutSection {
+    flex: none; 
+    width: 100%;
+    max-width: 500px;
+    justify-content: center; 
+  }
 }
