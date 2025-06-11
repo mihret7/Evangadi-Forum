@@ -10,7 +10,7 @@ const postQuestionRouter = express.Router()
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Post a new question (protected route)
-postQuestionRouter.post("/ask", postQuestion);
+postQuestionRouter.post("/ask",authMiddleware, postQuestion);
 
 
 

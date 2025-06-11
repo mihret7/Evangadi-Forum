@@ -9,8 +9,12 @@ async function authMiddleware(req,res,next) {
     console.log(authHeader)
     console.log(token)
     try {
-        const {username,userid}= jwt.verify(authHeader,process.env.WT_SECRET)
+        console.log("test 1");
+        const {username,userid}= jwt.verify(token, process.env.JWT_SECRET)
         req.user={username,userid}
+        console.log("test 2");
+        console.log(username, userid);
+        console.log("test 3");
         next()
     }catch (error){
         return res.status(StatusCodes.UNAUTHORIZED).json({error:"authorization invalid"})

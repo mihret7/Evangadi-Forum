@@ -6,9 +6,10 @@
 
 const express = require("express");
 const {  postAnswer} = require("../controller/postAnswerController");
+const authMiddleware = require("../middleware/authMiddleware");
 const postAnswerRouter = express.Router();
 
 // POST /api/answer
-postAnswerRouter.post("/answer", postAnswer);
+postAnswerRouter.post("/answer", authMiddleware, postAnswer);
 
 module.exports = postAnswerRouter;

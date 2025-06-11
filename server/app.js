@@ -25,7 +25,8 @@ const loginRouter = require("./routes/loginRoute")
 const answerRoutes = require("./routes/postAnswerRoute");
 const getquestions = require ("./routes/getquestionsRoute");
 const postQuestionRoutes = require("./routes/postQuestionsRoute");
-const getSingleQuestion = require("./routes/getquestionsRoute") //!
+const getSingleQuestion = require("./routes/getquestionsRoute"); //!
+const userProfileRouter = require("./routes/userProfileRoute");
 
 
 
@@ -40,6 +41,7 @@ app.use("/api/users", answerRoutes);
 app.use("/api/users", getquestions);  //! check the exported file name syntax must be the same 
 app.use("/api/users", postQuestionRoutes);
 app.use("/api/users", getSingleQuestion);  //!
+app.use("/api/users", userProfileRouter)
 
 
 
