@@ -1,6 +1,26 @@
 .title {
-  color: var(--text-dark); /* Use normal text color for all headings */
+  color: var(--text-dark);
   font-size: 2rem;
   text-align: center;
   margin-top: 2rem;
+}
+
+.landingPageContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem; 
+  padding: 20px;
+  height: 100vh; 
+  box-sizing: border-box;
+  background-color: aliceblue;
+}
+
+.login, .about {
+  flex: 1; 
+  max-width: 50%;
+  border-radius: 8px;
+}
+
+.login {
+  position: relative;
 }
