@@ -29,8 +29,8 @@ function Home() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((data) => {
-        console.log(data.data.profile)
         setUserProfile(data.data.profile);
+        setUserData(data.data.profile)
         return axios.get("/users/all-question", {
           headers: { Authorization: `Bearer ${token}` },
         });

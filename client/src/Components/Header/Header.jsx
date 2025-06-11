@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 import "./style.css";
 import logo from "../../assets/imgs/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../Context/userContext";
 
 const Header = () => {
+  const [userData, setUserData] = useContext(UserContext);
   const [mobile, setMobile] = useState(false);
+  const navigate = useNavigate()
 
   const toggleMobile = () => {
     setMobile((prev) => !prev);
+  };
+
+
+  const logout = () => {
+    setUserData(null);
+    localStorage.setItem("token", "");
+    navigate("/landing");
   };
 
   return (
@@ -21,9 +32,15 @@ const Header = () => {
         <Link to="#">How it works</Link>
       </nav>
 
-      <Link to="/landing">
-        <button className="sign-in-btn">SIGN IN</button>
-      </Link>
+       {userData ? (
+        <button onClick={logout} className="sign-in-btn">
+          LOGOUT
+        </button>
+      ) : (
+        <Link to="/landing">
+          <button className="sign-in-btn">SIGN IN</button>
+        </Link>
+      )}
 
       <div className="menu-toggle" onClick={toggleMobile}>
         &#9776;
