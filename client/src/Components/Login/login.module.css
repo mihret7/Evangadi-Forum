@@ -4,7 +4,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  margin-top: 90px;
+  margin-top: 50px;
 }
 
 .loginTitle {
@@ -34,7 +34,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 25px;
+  gap: 2px;
 }
 
 
@@ -47,16 +47,16 @@
   background-color: transparent;
 
   /* The animated line using a background gradient */
-  background-image: linear-gradient(#fe8402, #fe8402); /* Orange color */
-  background-size: 0% 2px; /* Starts hidden */
-  background-position: 50% 100%; /* At the bottom-center */
+  background-image: linear-gradient(#fe8402, #fe8402); 
+  background-size: 0% 2px; 
+  background-position: 50% 100%; 
   background-repeat: no-repeat;
   transition: background-size 0.4s ease;
 }
 
 .formGroup input:focus {
-  outline: none; /* Remove default browser outline */
-  background-size: 100% 2px; /* Animate to full width on focus */
+  outline: none; 
+  background-size: 100% 2px; 
 }
 
 /*
@@ -64,7 +64,7 @@
 */
 
 .passwordInputWrapper {
-  position: relative; /* This is a .formGroup, so styles apply */
+  position: relative; 
   display: flex;
   align-items: center;
 }
