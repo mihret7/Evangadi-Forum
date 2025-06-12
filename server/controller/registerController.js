@@ -12,14 +12,12 @@ async function register(req, res) {
         .json({ message: "All fields are required" });
     }
 
-
     // Validate email format
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Invalid email format" });
     }
-
 
     // Validate password strength (e.g., min 8 chars)
     if (password.length < 8) {
@@ -28,29 +26,27 @@ async function register(req, res) {
         .json({ message: "Password must be at least 8 characters" });
     }
 
-    
     // Check for existing user
     const [existing] = await dbConnection.query(
       "SELECT * FROM registration WHERE user_name = ? OR user_email = ?",
       [username, email]
     );
     // return res.json({username: username})
+    // If user exists, return conflict status
     if (existing.length > 0) {
       return res
         .status(409)
         .json({ message: "Username or email already exists" });
     }
     // Hash password
-    const salt = await bcrypt.genSalt(10)
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
 
     // Insert user into registration table
     const [result] = await dbConnection.query(
       "INSERT INTO registration (user_name, user_email, password) VALUES (?, ?, ?)",
       [username, email, hashedPassword]
     );
-
 
     // Insert into profile table
     await dbConnection.query(
@@ -64,16 +60,14 @@ async function register(req, res) {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    res
-      .status(StatusCodes.CREATED)
-      .json({
-        userid: result.insertId,
-        username,
-        firstname,
-        lastname,
-        email,
-        token,
-      });
+    res.status(StatusCodes.CREATED).json({
+      userid: result.insertId,
+      username,
+      firstname,
+      lastname,
+      email,
+      token,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -81,9 +75,5 @@ async function register(req, res) {
       .json({ message: "Error registering user", error: error.message });
   }
 }
-
-
-
-
 
 module.exports = { register };
