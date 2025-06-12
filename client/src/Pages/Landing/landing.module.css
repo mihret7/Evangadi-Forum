@@ -1,46 +1,58 @@
-.title {
-  color: var(--text-dark);
-  font-size: 2rem;
-  text-align: center;
-  margin-top: 2rem;
-}
+/* src/Pages/Landing/landing.module.css */
 
-.landingPageContainer {
+.pageContainer {
+    background-image: url(https://legacy.evangadi.com/themes/humans/assets/images/misc/bg-svg-f.svg);
+    
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 0px 0;
+  min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  min-height: 100vh;
-  background-color: aliceblue;
-  overflow-y: auto;
-  gap: 10px;
+  justify-content: center;
 }
 
-.login, .about {
-  width: 48%;
+.mainContent {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns items to the top */
+  gap: 50px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
 }
 
-.login {
-  position: relative;
+.formSection {
+  flex: 1;
+  max-width: 550px;
 }
 
-/* Only add media query for small screens */
-@media (max-width: 768px) {
-  .landingPageContainer {
+.aboutSection {
+  flex: 1;
+  max-width: 1500px;
+}
+
+/* Responsive Design for tablets and mobile devices */
+@media (max-width: 992px) {
+  .mainContent {
     flex-direction: column;
-    padding: 20px;
-    height: auto;
-    min-height: 100vh;
+    align-items: center;
+    gap: 40px;
   }
-
-  .about {
+  
+  .formSection,
+  .aboutSection {
+    max-width: 600px; /* Allow sections to be wider when stacked */
     width: 100%;
-    margin-bottom: 10px;
   }
+}
 
-  .login {
-    width: 100%;
-    min-height: 450px;
-    margin-bottom: 20px;
+@media (max-width: 576px) {
+  .pageContainer {
+    padding: 20px 0;
+  }
+  .mainContent {
+    padding: 0 15px;
   }
 }

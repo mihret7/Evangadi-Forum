@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styles from "./signup.module.css";
-import api from "../../Utility/axios";
+import api from "../../Utility/axios"; // Restored axios instance import
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-function SignUp() {
+// The component accepts an `onToggle` function to switch back to the login form.
+function SignUp({ onToggle }) {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -12,46 +14,63 @@ function SignUp() {
     userName: "",
     password: "",
   });
+  // State for handling both client-side and server-side errors
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Handle input changes
+  // Handles input changes and clears previous errors for that field
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // console.log(e.target);
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // Clear the specific error when the user starts typing again
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+    if (errors.api) {
+        setErrors((prev) => ({ ...prev, api: null }));
+    }
   };
 
-  // Handle form submit
+  // Handles form submission, validation, and API call
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/))
+
+    // --- Client-side validation ---
+    if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
       newErrors.email = "Please enter a valid email address.";
+    }
     if (!formData.firstName) newErrors.firstName = "First name is required.";
     if (!formData.lastName) newErrors.lastName = "Last name is required.";
     if (!formData.userName) newErrors.userName = "User name is required.";
     if (!formData.password || formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters.";
     }
+
     setErrors(newErrors);
+
+    // If there are validation errors, stop the submission
     if (Object.keys(newErrors).length > 0) return;
+
+    // --- API call ---
     try {
-      const response = await api.post("/users/register", {
+      // Post data to the registration endpoint
+      await api.post("/users/register", {
         username: formData.userName,
         firstname: formData.firstName,
         lastname: formData.lastName,
         email: formData.email,
         password: formData.password,
       });
-      alert("Registration successful!");
-      navigate("/login");
-      // TODO: Store token in local storage or context
-      // TODO: Clear form data
+
+      // On success
+      alert("Registration successful! Please sign in.");
+      onToggle(); // << Use onToggle to switch to the login form
+      
+      // Clear the form data
       setFormData({
         email: "",
         firstName: "",
@@ -59,47 +78,43 @@ function SignUp() {
         userName: "",
         password: "",
       });
-      // console.log(response.data);
+
     } catch (error) {
+      // Handle errors from the API (e.g., user already exists)
       setErrors({
-        api: error.response?.data?.message || "Registration failed.",
+        api: error.response?.data?.msg || "Registration failed. Please try again.",
       });
+      console.error("Registration error:", error);
     }
   };
 
   return (
     <div className={styles.signupContainer}>
+      <h2 className={styles.title}>Join the network</h2>
+      <p className={styles.subtitle}>
+        Already have an account?{" "}
+        <a onClick={onToggle} className={styles.signInLink}>
+          Sign in
+        </a>
+      </p>
       <form className={styles.signupForm} onSubmit={handleSubmit}>
-        <h2 className={styles.title}>Join the network</h2>
-
-        <p className={styles.subtitle}>
-          Already have an account?{" "}
-          <a onClick={() => navigate("/login")} className={styles.signInLink}>
-            Sign in
-          </a>
-        </p>
         <input
           type="email"
           name="email"
           placeholder="Email"
-          className={
-            styles.input + (errors.email ? " " + styles.inputError : "")
-          }
+          className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
           required
           value={formData.email}
           onChange={handleChange}
         />
-        {errors.email && (
-          <div className={styles.errorMessage}>{errors.email}</div>
-        )}
+        {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
+        
         <div className={styles.nameRow}>
           <input
             type="text"
             name="firstName"
             placeholder="First Name"
-            className={
-              styles.input + (errors.firstName ? " " + styles.inputError : "")
-            }
+            className={`${styles.input} ${errors.firstName ? styles.inputError : ""}`}
             required
             value={formData.firstName}
             onChange={handleChange}
@@ -108,9 +123,7 @@ function SignUp() {
             type="text"
             name="lastName"
             placeholder="Last Name"
-            className={
-              styles.input + (errors.lastName ? " " + styles.inputError : "")
-            }
+            className={`${styles.input} ${errors.lastName ? styles.inputError : ""}`}
             required
             value={formData.lastName}
             onChange={handleChange}
@@ -121,28 +134,24 @@ function SignUp() {
             {errors.firstName || errors.lastName}
           </div>
         )}
+        
         <input
           type="text"
           name="userName"
           placeholder="User Name"
-          className={
-            styles.input + (errors.userName ? " " + styles.inputError : "")
-          }
+          className={`${styles.input} ${errors.userName ? styles.inputError : ""}`}
           required
           value={formData.userName}
           onChange={handleChange}
         />
-        {errors.userName && (
-          <div className={styles.errorMessage}>{errors.userName}</div>
-        )}
+        {errors.userName && <div className={styles.errorMessage}>{errors.userName}</div>}
+
         <div className={styles.passwordWrapper}>
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            className={
-              styles.input + (errors.password ? " " + styles.inputError : "")
-            }
+            className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
             required
             value={formData.password}
             onChange={handleChange}
@@ -151,64 +160,13 @@ function SignUp() {
             type="button"
             className={styles.togglePassword}
             onClick={() => setShowPassword((prev) => !prev)}
-            tabIndex={0}
             aria-label="Toggle password visibility"
           >
-            {showPassword ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                  d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"
-                />
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="3"
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                  d="M17.94 17.94C16.11 19.25 14.13 20 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.53 9.53A3.001 3.001 0 0 1 12 9c1.66 0 3 1.34 3 3 0 .47-.11.91-.29 1.29"
-                />
-                <path stroke="#6c757d" strokeWidth="2" d="m1 1 22 22" />
-              </svg>
-            )}
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {errors.password && (
-          <div className={styles.errorMessage}>{errors.password}</div>
-        )}
-        <button type="submit" className={styles.submitBtn}>
-          Agree and Join
-        </button>
-
-        {errors.api && (
-          <div
-            className={styles.errorMessage}
-            style={{ textAlign: "center", marginBottom: "1em" }}
-          >
-            {errors.api}
-          </div>
-        )}
-
+        {errors.password && <div className={styles.errorMessage}>{errors.password}</div>}
+        
         <p className={styles.agreeText}>
           I agree to the{" "}
           <a href="#" className={styles.link}>
@@ -220,11 +178,19 @@ function SignUp() {
           </a>
           .
         </p>
+        
+        <button type="submit" className={styles.submitBtn}>
+          Agree and Join
+        </button>
+
+        {errors.api && (
+          <div className={`${styles.errorMessage} ${styles.apiError}`}>
+            {errors.api}
+          </div>
+        )}
+
         <p className={styles.alreadyAccount}>
-          <a
-            onClick={() => navigate("/login")}
-            className={styles.link}
-          >
+          <a onClick={onToggle} className={styles.link}>
             Already have an account?
           </a>
         </p>
@@ -234,3 +200,4 @@ function SignUp() {
 }
 
 export default SignUp;
+

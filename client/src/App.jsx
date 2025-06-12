@@ -6,9 +6,9 @@ import AskQuestions from "./Pages/AskQuestions";
 import QuestionDetail from "./Pages/QuestionDetailAndAnswer";
 import NotFound from "./Pages/NotFound";
 import "./App.css";
-import SignUp from "./Components/SignUp";
+// import SignUp from "./Components/SignUp";
 import Footer from "./Components/Footer/Footer";
-import Login from "./Components/Login/Login";
+// import Login from "./Components/Login/Login";
 import Header from "./Components/Header/Header";
 
 function App() {
@@ -23,8 +23,8 @@ function App() {
         <Route path="/question-detail" element={<QuestionDetail />} />
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/login" element={<Login />} /> */}
       </Routes>
     </div>
   );
