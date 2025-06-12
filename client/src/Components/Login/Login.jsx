@@ -31,14 +31,17 @@ function Login() {
 
     try {
       const response = await api.post("/users/login", formData);
-      
+
       // Store the token and user data in localStorage
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify({
-        userid: response.data.userid,
-        username: response.data.username,
-        email: response.data.email
-      }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          userid: response.data.userid,
+          username: response.data.username,
+          email: response.data.email,
+        })
+      );
 
       // Navigate to home page on successful login
       navigate("/home");
@@ -105,8 +108,8 @@ function Login() {
             </span>
           </div>
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={styles.submitButton}
           disabled={loading}
         >
