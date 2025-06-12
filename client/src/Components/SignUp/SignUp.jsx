@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 import styles from "./signup.module.css";
 import api from "../../Utility/axios";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,14 @@ function SignUp() {
       ...prev,
       [name]: value,
     }));
+    // Clear the error for the field being edited / when the user starts typing
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[name];
+      // Also clear API error if present
+      if (prev.api) delete newErrors.api;
+      return newErrors;
+    });
   };
 
   // Handle form submit
@@ -155,41 +164,9 @@ function SignUp() {
             aria-label="Toggle password visibility"
           >
             {showPassword ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                  d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"
-                />
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="3"
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                />
-              </svg>
+              <FiEye size={22} color="#6c757d" />
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="#6c757d"
-                  strokeWidth="2"
-                  d="M17.94 17.94C16.11 19.25 14.13 20 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.53 9.53A3.001 3.001 0 0 1 12 9c1.66 0 3 1.34 3 3 0 .47-.11.91-.29 1.29"
-                />
-                <path stroke="#6c757d" strokeWidth="2" d="m1 1 22 22" />
-              </svg>
+              <FiEyeOff size={22} color="#6c757d" />
             )}
           </button>
         </div>
@@ -221,10 +198,7 @@ function SignUp() {
           .
         </p>
         <p className={styles.alreadyAccount}>
-          <a
-            onClick={() => navigate("/login")}
-            className={styles.link}
-          >
+          <a onClick={() => navigate("/login")} className={styles.link}>
             Already have an account?
           </a>
         </p>
