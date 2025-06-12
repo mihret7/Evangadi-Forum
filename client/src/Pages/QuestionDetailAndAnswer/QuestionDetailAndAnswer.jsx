@@ -8,10 +8,11 @@ import LayOut from "../../Components/Layout/Layout";
 
 function QuestionDetailAndAnswer() {
   const token = localStorage.getItem("token");
-  const { question_id, user_id } = useParams();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const { question_id } = useParams();
 
   const [answer, setAnswer] = useState({
-    user_id,
+    user_id: user?.userid || "",
     question_id,
     answer: "",
   });
@@ -21,7 +22,7 @@ function QuestionDetailAndAnswer() {
   const [error, setError] = useState(null);
 
   const [answersForQuestion, setAllQuestionAnswers] = useState([]);
-  const [questionDetail, setQuestionDetail] = useState(null); 
+  const [questionDetail, setQuestionDetail] = useState(null);
 
   const submitAnswer = (e) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ function QuestionDetailAndAnswer() {
     setError(null);
 
     axios
-      .post("/user/answer", answer, {
+      .post("/users/answer", answer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +58,7 @@ function QuestionDetailAndAnswer() {
     setLoading(true);
     setError(null);
     axios
-      .get(`/user/getAllAnswers/${question_id}`, {
+      .get(`/users/answer/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,14 +78,13 @@ function QuestionDetailAndAnswer() {
     setLoading(true);
     setError(null);
     axios
-      .get(`/user/getQuestionDetail/${question_id}`, {
+      .get(`/users/question/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setQuestionDetail(res.data);
+        setQuestionDetail(res.data.question);
       })
       .catch(() => {
         setError("Failed to load question detail. Please try again.");
@@ -100,7 +100,6 @@ function QuestionDetailAndAnswer() {
     getAllAnswers();
   }, [question_id]);
 
-  
   if (response) {
     return (
       <div className={styles.success__msg}>
