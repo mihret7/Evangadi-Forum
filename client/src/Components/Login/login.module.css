@@ -1,17 +1,10 @@
-/* src/Components/Login/login.module.css */
 
 .loginContainer {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   box-sizing: border-box;
-
-  /* --- Consistent Height --- */
-  min-height: 620px;
   display: flex;
   flex-direction: column;
+  margin-top: 90px;
 }
 
 .loginTitle {
@@ -38,16 +31,12 @@
 }
 
 .loginForm {
-  flex-grow: 1; /* This makes the form expand to fill space */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* This centers the inputs vertically */
+  justify-content: center;
   gap: 25px;
 }
 
-/*
-  THE FOCUS EFFECT - Applied directly to the input
-*/
 
 .formGroup input {
   width: 100%;

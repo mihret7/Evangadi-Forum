@@ -1,22 +1,23 @@
 /* src/Pages/Landing/landing.module.css */
 
 .pageContainer {
-    background-image: url(https://legacy.evangadi.com/themes/humans/assets/images/misc/bg-svg-f.svg);
-    
-  width: 100%;
+  background-image: url(https://legacy.evangadi.com/themes/humans/assets/images/misc/bg-svg-f.svg);
   background-color: #f8f8f8;
-  padding: 0px 0;
-  min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: calc(100vh - 180px);
+  padding: 50px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-size: cover;
 }
 
 .mainContent {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Aligns items to the top */
-  gap: 50px;
+  align-items: center;
+  gap: 100px;
   width: 100%;
   max-width: 1200px;
   padding: 0 20px;
@@ -30,21 +31,55 @@
 
 .aboutSection {
   flex: 1;
-  max-width: 1500px;
+  max-width: 600px;
 }
 
-/* Responsive Design for tablets and mobile devices */
+/* --- NEW STYLES FOR ANIMATION --- */
+
+.formAnimationContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 620px; 
+  overflow: hidden; 
+  position: relative;
+}
+
+
+.formSlider {
+  display: flex;
+  width: 200%; 
+  transition: transform 0.6s ease-in-out; 
+}
+
+.showSignUp {
+  transform: translateX(-50%); 
+}
+
+
+.formSlide {
+  width: 50%;
+  padding: 40px; 
+  box-sizing: border-box;
+}
+
+/* --- END OF NEW STYLES --- */
+
 @media (max-width: 992px) {
   .mainContent {
     flex-direction: column;
     align-items: center;
     gap: 40px;
   }
-  
   .formSection,
   .aboutSection {
-    max-width: 600px; /* Allow sections to be wider when stacked */
+    max-width: 600px;
     width: 100%;
+  }
+  .formAnimationContainer {
+    min-height: auto; 
   }
 }
 
@@ -54,5 +89,8 @@
   }
   .mainContent {
     padding: 0 15px;
+  }
+  .formSlide {
+    padding: 25px; 
   }
 }

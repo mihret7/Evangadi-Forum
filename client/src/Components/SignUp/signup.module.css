@@ -1,13 +1,6 @@
-/* src/Components/SignUp/signup.module.css */
-
 .signupContainer {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   box-sizing: border-box;
-  min-height: 620px;
   display: flex;
   flex-direction: column;
 }
@@ -32,16 +25,13 @@
 }
 
 .signupForm {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 15px;
+  
 }
 
-/*
-  THE FOCUS EFFECT - PURE CSS SOLUTION
-*/
 
 .input {
   width: 100%;
@@ -52,16 +42,16 @@
   background-color: transparent;
 
   /* --- The Trick Starts Here --- */
-  background-image: linear-gradient(#4b6bfb, #4b6bfb); /* The color of our line */
-  background-size: 0% 2px; /* Starts hidden: 0% width, 2px thick */
-  background-position: 50% 100%; /* Position: horizontal-center, vertical-bottom */
+  background-image: linear-gradient(#4b6bfb, #4b6bfb); 
+  background-size: 0% 2px; 
+  background-position: 50% 100%; 
   background-repeat: no-repeat;
-  transition: background-size 0.4s ease; /* Animate the size change */
+  transition: background-size 0.4s ease; 
 }
 
 .input:focus {
-  outline: none; /* Remove the default browser outline */
-  background-size: 100% 2px; /* Animate to 100% width on focus */
+  outline: none; 
+  background-size: 100% 2px; 
 }
 
 /*
@@ -78,13 +68,13 @@
 }
 
 .passwordWrapper {
-  position: relative; /* Keep this for the eye icon positioning */
+  position: relative; 
   display: flex;
   align-items: center;
 }
 
 .passwordWrapper .input {
-  width: 100%; /* Ensure it fills the wrapper */
+  width: 100%; 
   padding-right: 45px;
 }
 

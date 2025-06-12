@@ -2,8 +2,7 @@
 /* src/Components/About/About.module.css */
 
 .about_section {
-  padding-top: 15%;
-  max-width: 1500px; 
+  max-width: 1200px; 
 }
 
 .about_title {

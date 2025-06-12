@@ -1,4 +1,4 @@
- // src/Pages/Landing/Landing.js
+// src/Pages/Landing/Landing.js
 
 import React, { useState } from "react";
 import Login from "../../Components/Login/Login";
@@ -8,10 +8,8 @@ import About from "../../Components/About/About";
 import LayOut from "../../Components/Layout/Layout";
 
 function Landing() {
-  // State to toggle between Login and SignUp forms
   const [showSignUp, setShowSignUp] = useState(false);
 
-  // Function to toggle the view
   const toggleForm = () => {
     setShowSignUp((prev) => !prev);
   };
@@ -20,13 +18,25 @@ function Landing() {
     <LayOut>
       <div className={styles.pageContainer}>
         <main className={styles.mainContent}>
-          {/* Form Section (conditionally renders Login or SignUp) */}
+          {/* Form Section with Animation Container */}
           <section className={styles.formSection}>
-            {showSignUp ? (
-              <SignUp onToggle={toggleForm} />
-            ) : (
-              <Login onToggle={toggleForm} />
-            )}
+            {/* 1. This is the main container with the shadow and fixed height */}
+            <div className={styles.formAnimationContainer}>
+              {/* 2. This inner container will slide left and right */}
+              <div
+                className={`${styles.formSlider} ${
+                  showSignUp ? styles.showSignUp : ""
+                }`}
+              >
+                {/* 3. Each form is a "slide" */}
+                <div className={styles.formSlide}>
+                  <Login onToggle={toggleForm} />
+                </div>
+                <div className={styles.formSlide}>
+                  <SignUp onToggle={toggleForm} />
+                </div>
+              </div>
+            </div>
           </section>
 
           {/* About Section */}
@@ -40,4 +50,3 @@ function Landing() {
 }
 
 export default Landing;
-
