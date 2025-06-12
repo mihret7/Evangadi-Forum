@@ -1,156 +1,121 @@
+
 .loginContainer {
-  background-color: white;
-  padding: 3rem;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* More subtle shadow */
   width: 100%;
-  max-width: 400px; /* Adjust max-width if needed to match design precisely */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 0; /* Ensure no conflicting margin */
-  position: absolute; /* Set to absolute position */
-  top: 50%; /* Position 50% from the top */
-  left: 76%; 
-  transform: translate(-50%, -50%); /* Adjust by half its own width and height to truly center */
-  /* Removed margin-top to avoid conflict and centralize positioning on parent */
+  margin-top: 50px;
 }
 
 .loginTitle {
-  font-size: 2.2rem;
+  font-size: 28px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-  text-align: center; /* Center the login title */
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .createAccountPrompt {
-  font-size: 1.2rem;
-  color: #999;
-  margin-bottom: 1rem;
-  text-align: center; /* Center the prompt text */
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 14px;
 }
 
 .createAccountLink {
-  color: #F99304;
+  color: #fe8402;
+  font-weight: 500;
+  cursor: pointer;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 1.2rem;
 }
-
 .createAccountLink:hover {
   text-decoration: underline;
-  cursor: pointer;
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  justify-content: center;
+  gap: 2px;
 }
 
-.formGroup {
-  display: flex;
-  flex-direction: column;
-}
-
-.formGroup label {
-  font-size: 1.2rem;
-  color: #555;
-  margin-bottom: 0.3rem;
-}
 
 .formGroup input {
-  padding: 0.8rem 1rem;
-  border: 1px solid #c8c8c8;
-  border-radius: 4px;
-  font-size: 1.2rem;
-  transition: border-color 0.2s;
   width: 100%;
-  box-sizing: border-box;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
-}
+  padding: 15px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: transparent;
 
-.formGroup input::placeholder {
-  color: #B0B0B0;
-  font-size: 1.2rem;
+  /* The animated line using a background gradient */
+  background-image: linear-gradient(#fe8402, #fe8402); 
+  background-size: 0% 2px; 
+  background-position: 50% 100%; 
+  background-repeat: no-repeat;
+  transition: background-size 0.4s ease;
 }
 
 .formGroup input:focus {
-  outline: none;
-  border-color: #A0D8FF;
-  box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.1);
+  outline: none; 
+  background-size: 100% 2px; 
 }
 
+/*
+  END OF FOCUS EFFECT
+*/
+
 .passwordInputWrapper {
-  position: relative;
-  width: 100%;
+  position: relative; 
+  display: flex;
+  align-items: center;
 }
 
 .passwordInputWrapper input {
   width: 100%;
-  padding-right: 2.8rem;
-  box-sizing: border-box;
+  padding-right: 45px;
 }
 
 .passwordToggle {
   position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 15px;
   cursor: pointer;
-  color: #555;
-  font-size: 1.6rem;
+  color: #888;
+  font-size: 20px;
 }
 
 .submitButton {
-  background-color: #F99304;
-  color: white;
-  padding: 0.8rem 3rem;
+  background-color: #fe8402;
+  color: #fff;
   border: none;
+  padding: 15px;
   border-radius: 5px;
-  font-size: 1.35rem;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 1rem;
-  width: auto;
-  align-self: center;
+  margin-top: 20px;
 }
-
 .submitButton:hover {
-  background-color: #E68A00;
+  background-color: #e57702;
 }
 
 .createAccountLinkBottom {
+  display: block;
   text-align: center;
-  font-size: 1.2rem;
-  color: #F99304;
+  margin-top: 20px;
+  color: #fe8402;
+  font-weight: 500;
+  cursor: pointer;
   text-decoration: none;
-  margin-top: 1rem;
-  font-weight: bold;
 }
-
 .createAccountLinkBottom:hover {
   text-decoration: underline;
-  cursor: pointer;
 }
 
-/* Responsive adjustments for the login box */
-@media (max-width: 768px) {
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
   .loginContainer {
-    padding: 1.5rem;
-    max-width: 90%;
+    min-height: auto;
   }
-  .loginTitle {
-    font-size: 2.2rem;
-  }
-  .createAccountPrompt,
-  .createAccountLink,
-  .formGroup label,
-  .formGroup input,
-  .submitButton,
-  .createAccountLinkBottom {
-    font-size: 1.1rem;
-  }
-} 
+}
+

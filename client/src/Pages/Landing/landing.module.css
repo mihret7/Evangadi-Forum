@@ -1,46 +1,96 @@
-.title {
-  color: var(--text-dark);
-  font-size: 2rem;
-  text-align: center;
-  margin-top: 2rem;
-}
+/* src/Pages/Landing/landing.module.css */
 
-.landingPageContainer {
+.pageContainer {
+  background-image: url(https://legacy.evangadi.com/themes/humans/assets/images/misc/bg-svg-f.svg);
+  background-color: #f8f8f8;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: calc(100vh - 180px);
+  padding: 50px 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  min-height: 100vh;
-  background-color: aliceblue;
-  overflow-y: auto;
-  gap: 10px;
+  justify-content: center;
+  background-size: cover;
 }
 
-.login, .about {
-  width: 48%;
+.mainContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
 }
 
-.login {
+.formSection {
+  flex: 1;
+  max-width: 550px;
+}
+
+.aboutSection {
+  flex: 1;
+  max-width: 600px;
+}
+
+/* --- NEW STYLES FOR ANIMATION --- */
+
+.formAnimationContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 520px; 
+  overflow: hidden; 
   position: relative;
 }
 
-/* Only add media query for small screens */
-@media (max-width: 768px) {
-  .landingPageContainer {
+
+.formSlider {
+  display: flex;
+  width: 200%; 
+  transition: transform 0.6s ease-in-out; 
+}
+
+.showSignUp {
+  transform: translateX(-50%); 
+}
+
+
+.formSlide {
+  width: 50%;
+  padding: 40px; 
+  box-sizing: border-box;
+}
+
+/* --- END OF NEW STYLES --- */
+
+@media (max-width: 992px) {
+  .mainContent {
     flex-direction: column;
-    padding: 20px;
-    height: auto;
-    min-height: 100vh;
+    align-items: center;
+    gap: 40px;
   }
-
-  .about {
+  .formSection,
+  .aboutSection {
+    max-width: 600px;
     width: 100%;
-    margin-bottom: 10px;
   }
+  .formAnimationContainer {
+    min-height: auto; 
+  }
+}
 
-  .login {
-    width: 100%;
-    min-height: 450px;
-    margin-bottom: 20px;
+@media (max-width: 576px) {
+  .pageContainer {
+    padding: 20px 0;
+  }
+  .mainContent {
+    padding: 0 15px;
+  }
+  .formSlide {
+    padding: 25px; 
   }
 }
