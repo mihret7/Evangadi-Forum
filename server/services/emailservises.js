@@ -13,7 +13,7 @@ async function sendAnswerNotification(email, questionId) {
     from: '"Q&A App" <no-reply@qaapp.com>',
     to: email,
     subject: "Your question has been answered!",
-    text: `Your question has been answered. Visit: https://yourdomain.com/questions/${questionId}`,
+    text: `Your question has been answered. Visit: https://http://localhost:4321/question-detail/${questionId}`,
   };
 
   await transporter.sendMail(mailOptions);
