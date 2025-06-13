@@ -96,3 +96,26 @@
     display: none;
   }
 }
+.howItWorksWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 2.25rem;
+  background-color: #f3f3f3;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 220px;
+  font-size: 1.5rem;
+  z-index: 999;
+}
+
+.howItWorksWrapper:hover .tooltip {
+  display: inline-block;
+}

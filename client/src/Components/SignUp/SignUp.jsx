@@ -221,10 +221,7 @@ function SignUp() {
           .
         </p>
         <p className={styles.alreadyAccount}>
-          <a
-            onClick={() => navigate("/login")}
-            className={styles.link}
-          >
+          <a onClick={() => navigate("/login")} className={styles.link}>
             Already have an account?
           </a>
         </p>

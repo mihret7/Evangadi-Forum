@@ -35,7 +35,8 @@ function Login() {
     <div className={styles.loginContainer}>
       <h2 className={styles.loginTitle}>Login to your account</h2>
       <p className={styles.createAccountPrompt}>
-        Don't have an account? <a 
+        Don't have an account?{" "}
+        <a
           onClick={() => navigate("/sign-up")}
           className={styles.createAccountLink}
         >
@@ -65,15 +66,18 @@ function Login() {
               placeholder="Your Password"
               required
             />
-            <span className={styles.passwordToggle} onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash /> : <FaEye />} 
+            <span
+              className={styles.passwordToggle}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
         </div>
         <button type="submit" className={styles.submitButton}>
           submit
         </button>
-        <a 
+        <a
           onClick={() => navigate("/sign-up")}
           className={styles.createAccountLinkBottom}
         >
@@ -84,4 +88,4 @@ function Login() {
   );
 }
 
-export default Login; 
+export default Login;
