@@ -4,7 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const dbConnection = require("../db/db.Config");
 
 
-//login route implementation FOR already registered users
+//login route implementation 
 async function login(req, res) {
     const { email, password } = req.body;
   
@@ -62,4 +62,4 @@ async function login(req, res) {
         });
     }
   }
-module.exports = { login };  
+module.exports = { login };  // export the login function
