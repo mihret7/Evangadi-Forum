@@ -3,7 +3,7 @@ import styles from "./home.module.css";
 import { useState, useEffect } from "react";
 import axios from "../../Utility/axios";
 import { FaUserCircle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import LayOut from "../../Components/Layout/Layout";
 import { UserContext } from "../../Components/Context/userContext";
@@ -12,7 +12,6 @@ function Home() {
   const [userData, setUserData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
-
   useEffect(() => {
     // If no user data found, redirect to login page
     if (!userData) {
@@ -33,7 +32,7 @@ function Home() {
           navigate("/landing");
         }
       });
-  }, [navigate]); // Added navigate to dependency array
+  }, [navigate]);
 
   return (
     <LayOut>
