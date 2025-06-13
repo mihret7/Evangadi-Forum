@@ -1,43 +1,67 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./home.module.css";
 import { useState, useEffect } from "react";
 import axios from "../../Utility/axios";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import LayOut from "../../Components/Layout/Layout"
+import { UserContext } from "../../Components/Context/userContext";
 
 function Home() {
+  const [userData, setUserData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
+    
+    // If no user data found, redirect to login page
+    if (!userData) {
+      navigate("/landing");
+      return;
+    }
+
+    // Fetch questions from the API
     axios
-      .get("users/all-question")
+      .get("/question")
       .then((res) => {
-        console.log(res.data.question);
         setQuestions(res.data.question);
       })
-      .catch((err) => console.error("Failed to fetch questions:", err));
-  }, []);
+      .catch((err) => {
+        console.error("Failed to fetch questions:", err);
+        // If unauthorized (401), redirect to login
+        if (err.response?.status === 401) {
+          navigate("/landing");
+        }
+      });
+  }, [navigate]); // Added navigate to dependency array
+
   return (
     <LayOut>
       <section className={styles.main_container}>
         <div className={styles.homepage_container}>
           <div className={styles.upper_section}>
             <div className={styles.title}>
-              <Link to="/" className={styles.btn}>
-                <p>Ask Question</p>
+              {/* Changed route from "/" to "/ask-questions" to fix navigation */}
+              <Link to="/ask-questions" className={styles.Askbtn}>
+                Ask Question
               </Link>
-              {/* get user name from state */}
-              <p>Welcome: username</p>
+              {/* Display actual username from user state, fallback to "User" if not available */}
+              <p>Welcome: {userData?.username || "User"}</p>
             </div>
             <h1 className={styles.questions_list}>Questions</h1>
           </div>
-          {questions.map((q) => (
+          {questions.length === 0 ? (
+            <p>No questions yet. Be the first to post a question!</p>
+          ) : (
+          questions.map((q) => (
+            // Added key prop to the Link component for proper React list rendering
             <Link
+              key={q.question_id}
               to={`/question-detail/${q.question_id}`}
               className={styles.link_container}
             >
-              <div key={q.question_id}>
+              <div>
                 <div className={styles.user_container}>
                   <div className={styles.user_question}>
                     <div className={styles.usericon_and_username}>
@@ -52,7 +76,7 @@ function Home() {
                 </div>
               </div>
             </Link>
-          ))}
+          )))}
         </div>
       </section>
     </LayOut>

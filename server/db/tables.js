@@ -1,14 +1,16 @@
-export let create_registration = `
+
+const create_registration = `
     CREATE TABLE IF NOT EXISTS registration (
       user_id int NOT NULL AUTO_INCREMENT,
       user_name varchar(50) NOT NULL,
       user_email varchar(254) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       password varchar(100) NOT NULL,
       PRIMARY KEY (user_id)
     )`;
 
 // Profile table
-export let create_profile = `
+const create_profile = `
     CREATE TABLE IF NOT EXISTS profile (
       user_profile_id int NOT NULL AUTO_INCREMENT,
       user_id int NOT NULL,
@@ -19,7 +21,8 @@ export let create_profile = `
     )`;
 
 // Question table
-export let create_question = `
+
+const create_question = `
     CREATE TABLE IF NOT EXISTS question (
       question_id int NOT NULL AUTO_INCREMENT,
       question_title varchar(100) NOT NULL,
@@ -27,18 +30,28 @@ export let create_question = `
       tag varchar(20),
       user_id int NOT NULL,
       post_id int NOT NULL UNIQUE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (question_id),
       FOREIGN KEY (user_id) REFERENCES registration(user_id)
     )`;
 
 // Answer table
-export let create_answer = `
+const create_answer = `
     CREATE TABLE IF NOT EXISTS answer (
       answer_id int NOT NULL AUTO_INCREMENT,
       answer text NOT NULL,
       user_id int NOT NULL,
       question_id int NOT NULL,
       PRIMARY KEY (answer_id),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES registration(user_id),
       FOREIGN KEY (question_id) REFERENCES question(question_id)
     )`;
+
+
+module.exports = {
+  create_registration,
+  create_profile,
+  create_question,
+  create_answer,
+};

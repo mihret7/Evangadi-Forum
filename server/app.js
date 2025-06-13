@@ -1,4 +1,4 @@
-// imports 
+// imports
 const express = require("express");
 const cors = require("cors");
 const dbconnection = require("./db/db.Config");
@@ -10,38 +10,42 @@ dotenv.config();
 
 // middlewares 
 const app = express();
-app.use(cors({ origin: true, credentials: true })); // allow resource sharing from all origins DEV only
+
+app.use(
+  cors({
+    origin: "http://localhost:4321",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json()); // to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // to parse URL-encoded request bodies
 
-
-
 // import admin routes
-const initDB_Router = require("./routes/initDB_route")
+const initDB_Router = require("./routes/initDB_route");
 const createTableRouter = require("./routes/createTablesRoute");
 // import user routes
 const registerRouter = require("./routes/registerRoute");
-const loginRouter = require("./routes/loginRoute")
+const loginRouter = require("./routes/loginRoute");
 const answerRoutes = require("./routes/postAnswerRoute");
-const getquestions = require ("./routes/getquestionsRoute");
+const getquestions = require("./routes/getquestionsRoute");
 const postQuestionRoutes = require("./routes/postQuestionsRoute");
-const getSingleQuestion = require("./routes/getquestionsRoute") //!
-
-
-
+const getSingleQuestion = require("./routes/getquestionsRoute");
+const getAnswerRouter = require("./routes/getAnswerRoute");
 
 // admin routes middleware
 app.use("/api/admin", initDB_Router);
 app.use("/api/admin", createTableRouter);
 // user routes middleware
-app.use("/api/users", registerRouter);
-app.use("/api/users", loginRouter);
-app.use("/api/users", answerRoutes);
-app.use("/api/users", getquestions);  //! check the exported file name syntax must be the same 
-app.use("/api/users", postQuestionRoutes);
-app.use("/api/users", getSingleQuestion);  //!
-
-
+app.use("/api/user", registerRouter);
+app.use("/api/user", loginRouter);
+app.use("/api", answerRoutes);
+app.use("/api", getquestions);
+app.use("/api", postQuestionRoutes);
+app.use("/api", getSingleQuestion); 
+app.use("/api", getAnswerRouter);
 
 
 // Start server and test database connection
@@ -57,36 +61,3 @@ async function startServer() {
 }
 
 startServer();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
