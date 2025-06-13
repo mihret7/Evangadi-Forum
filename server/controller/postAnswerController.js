@@ -12,10 +12,17 @@
 //   const { answer, user_id, question_id } = req.body;
 
 //   // to Validate input
-//   if (!answer || !user_id || !question_id) {
+//   if (!answer) {
 //     return res.status(400).json({
 //       success: false,
-//       message: "Answer, user_id, and question_id are required.",
+//       message: "Answer is required.",
+//     });
+//   }
+
+//   if (!user_id) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "You have to login first.",
 //     });
 //   }
 
@@ -42,34 +49,27 @@
 // module.exports = {postAnswer};
 
 const dbconnection = require("../db/db.Config");
-const { sendAnswerNotification } = require("../services/emailservice");
+const { sendAnswerNotification } = require("../services/emailservises");
 
 async function postAnswer(req, res) {
   const { answer, user_id, question_id } = req.body;
 
-  // to Validate input
-  if (!answer) {
+  if (!answer || !user_id || !question_id) {
     return res.status(400).json({
       success: false,
-      message: "Answer is required.",
-    });
-  }
-
-  if (!user_id) {
-    return res.status(400).json({
-      success: false,
-      message: "You have to login first.",
+      message: "Answer, user_id, and question_id are required.",
     });
   }
 
   try {
+    // Insert answer with automatic timestamp
     const insertQuery = `
       INSERT INTO answer (answer, user_id, question_id)
       VALUES (?, ?, ?)
     `;
     await dbconnection.execute(insertQuery, [answer, user_id, question_id]);
 
-    // Fetch the email of the user who asked the question
+    // Fetch email of the user who asked the question
     const [questionRows] = await dbconnection.query(
       `SELECT r.user_email 
        FROM question q 
