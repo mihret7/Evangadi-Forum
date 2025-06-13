@@ -15,13 +15,6 @@
 
 
 
-<<<<<<< HEAD
-  .login {
-    width: 100%;
-    min-height: 450px;
-    margin-bottom: 20px;
-  }
-=======
 .sliderWrapper {
   display: flex;
   width: 200%; 
@@ -48,5 +41,4 @@
 .shrink {
   transform: scale(0.8);
   transform-origin: right center;
->>>>>>> main
 }
