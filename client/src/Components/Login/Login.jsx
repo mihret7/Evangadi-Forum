@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./login.module.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../../Utility/axios";
 import { UserContext } from "../Context/userContext";
 import { toast } from "react-toastify";
 
 function Login() {
+  const location = useLocation();
   const [userData, setUserData] = useContext(UserContext);
   const [formData, setFormData] = useState({
     email: "",
@@ -59,7 +60,7 @@ function Login() {
         autoClose: 3000,
         style: {
           marginTop: "70px",
-          padding: "8px 12px", // reduce padding
+          padding: "7px 7px", // reduce padding
           fontSize: "1.5rem", // smaller font
           color: "#ff8107",
           fontWeight: "bold",

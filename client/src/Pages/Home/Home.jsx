@@ -12,13 +12,21 @@ function Home() {
   const [userData, setUserData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    // If no user data found, redirect to login page
-    if (!userData) {
-      navigate("/landing");
-      return;
-    }
 
+  // handler for Ask Question button
+  const handleAskQuestion = () => {
+    if (!userData?.userid) {
+      // redirect with message
+      navigate("/landing", {
+        state: { message: "Please login to ask question" },
+      });
+    } else {
+      // user logged in, go to ask question page
+      navigate("/ask-questions");
+    }
+  };
+
+  useEffect(() => {
     // Fetch questions from the API
     axios
       .get("/question")
@@ -41,9 +49,9 @@ function Home() {
           <div className={styles.upper_section}>
             <div className={styles.title}>
               {/* Changed route from "/" to "/ask-questions" to fix navigation */}
-              <Link to="/ask-questions" className={styles.Askbtn}>
+              <button onClick={handleAskQuestion} className={styles.Askbtn}>
                 Ask Question
-              </Link>
+              </button>
               {/* Display actual username from user state, fallback to "User" if not available */}
               <p>Welcome: {userData?.username || "User"}</p>
             </div>
