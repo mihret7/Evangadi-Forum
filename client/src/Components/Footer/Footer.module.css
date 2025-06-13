@@ -38,6 +38,7 @@
 .contactSection {
   flex: 1;
   min-width: 250px;
+  text-align: left;
 }
 
 h3 {
