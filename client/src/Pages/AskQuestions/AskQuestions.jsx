@@ -3,7 +3,7 @@ import styles from "./askQuestions.module.css";
 import axios from "../../Utility/axios";
 import { Link, useNavigate } from "react-router-dom";
 import LayOut from "../../Components/Layout/Layout";
-import { UserContext } from "./../../Components/Context/UserContext";
+import { UserContext } from "../../Components/Context/userContext";
 
 function AskQuestions() {
   const token = localStorage.getItem("token");

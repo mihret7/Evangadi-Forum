@@ -10,8 +10,6 @@ function Landing() {
   const location = useLocation();
   const isSignupPage = location.pathname === "/sign-up";
 
-
-
   return (
     <LayOut>
       <div className={styles.landingPageContainer}>

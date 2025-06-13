@@ -3,7 +3,7 @@ import styles from "./login.module.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../Utility/axios";
-import { UserContext } from "./../Context/UserContext";
+import { UserContext } from "../Context/userContext";
 import { toast } from "react-toastify";
 
 function Login() {

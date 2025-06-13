@@ -11,8 +11,8 @@ import { toast } from "react-toastify";
 const Header = () => {
   const [mobile, setMobile] = useState(false);
   const [userData, setUserData] = useContext(UserContext);
-  console.log(userData)
-  const navigate = useNavigate()
+  console.log(userData);
+  const navigate = useNavigate();
 
   const toggleMobile = () => {
     setMobile((prev) => !prev);
@@ -55,20 +55,16 @@ const Header = () => {
             <Link to="#">How it works</Link>
           </nav>
 
-
-          
           {userData?.userid ? (
-        <button onClick={logout} className={styles.sign_in_btn}>
-          LOGOUT
-        </button>
-      ) : (
-        <Link to="/landing">
-          <button className={styles.sign_in_btn}>SIGN IN</button>
-        </Link>
-      )}
+            <button onClick={logout} className={styles.sign_in_btn}>
+              LOGOUT
+            </button>
+          ) : (
+            <Link to="/landing">
+              <button className={styles.sign_in_btn}>SIGN IN</button>
+            </Link>
+          )}
 
-
-          
           <div className={styles.menu_toggle} onClick={toggleMobile}>
             &#9776;
           </div>
@@ -79,7 +75,3 @@ const Header = () => {
 };
 
 export default Header;
-
-
-
-
