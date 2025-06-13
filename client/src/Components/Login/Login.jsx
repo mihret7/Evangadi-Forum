@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./login.module.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import api from "../../Utility/axios";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ function Login() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,14 +20,39 @@ function Login() {
       ...prev,
       [name]: value,
     }));
+    // Clear error when user starts typing
+    if (error) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", formData);
-    // Assuming successful login, navigate to home page
-    navigate("/home"); // Navigate to the home page
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await api.post("/users/login", formData);
+      
+      // Store the token and user data in localStorage
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify({
+        userid: response.data.userid,
+        username: response.data.username,
+        email: response.data.email
+      }));
+
+      // Navigate to home page on successful login
+      navigate("/home");
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setError("Invalid email or password");
+      } else if (error.response?.status === 404) {
+        setError("User not found. Please register first.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -43,6 +71,7 @@ function Login() {
           Create a new account
         </a>
       </p>
+      {error && <div className={styles.errorMessage}>{error}</div>}
       <form onSubmit={handleSubmit} className={styles.loginForm}>
         <div className={styles.formGroup}>
           <input
@@ -53,6 +82,7 @@ function Login() {
             onChange={handleChange}
             placeholder="Your Email"
             required
+            disabled={loading}
           />
         </div>
         <div className={styles.formGroup}>
@@ -65,6 +95,7 @@ function Login() {
               onChange={handleChange}
               placeholder="Your Password"
               required
+              disabled={loading}
             />
             <span
               className={styles.passwordToggle}
@@ -74,8 +105,12 @@ function Login() {
             </span>
           </div>
         </div>
-        <button type="submit" className={styles.submitButton}>
-          submit
+        <button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
         <a
           onClick={() => navigate("/sign-up")}
