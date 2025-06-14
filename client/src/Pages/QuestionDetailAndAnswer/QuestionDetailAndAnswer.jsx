@@ -9,9 +9,9 @@ import { UserContext } from "../../Components/Context/userContext";
 function QuestionDetailAndAnswer() {
   const token = localStorage.getItem("token");
   const [userData, setUserData] = useContext(UserContext);
-  const { question_id} = useParams();
+  const { question_id } = useParams();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [answer, setAnswer] = useState({
     user_id: userData?.userid,
@@ -24,19 +24,18 @@ function QuestionDetailAndAnswer() {
   const [error, setError] = useState({
     getAnswerError: null,
     getQuestionDetailError: null,
-    postAnswerError: null
+    postAnswerError: null,
   });
 
   const [answersForQuestion, setAllQuestionAnswers] = useState([]);
-  const [questionDetail, setQuestionDetail] = useState(null); 
-
-
+  const [questionDetail, setQuestionDetail] = useState(null);
 
   const submitAnswer = (e) => {
     e.preventDefault();
     setLoading(true);
     setError({
-      ...error, postAnswerError: null,
+      ...error,
+      postAnswerError: null,
     });
 
     axios
@@ -46,11 +45,12 @@ function QuestionDetailAndAnswer() {
         },
       })
       .then((res) => {
-       console.log(res.data);
+        console.log(res.data);
         setResponse(res.data);
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || err.message || "Something went wrong";
+        const errorMessage =
+          err.response?.data?.message || err.message || "Something went wrong";
         setError((prev) => ({ ...prev, postAnswerError: errorMessage }));
       })
       .finally(() => {
@@ -69,7 +69,8 @@ function QuestionDetailAndAnswer() {
   const getAllAnswers = () => {
     setLoading(true);
     setError({
-      ...error, getAnswerError: null
+      ...error,
+      getAnswerError: null,
     });
     axios
       .get(`/answer/${question_id}`, {
@@ -81,7 +82,8 @@ function QuestionDetailAndAnswer() {
         setAllQuestionAnswers(res.data);
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || err.message || "Something went wrong";
+        const errorMessage =
+          err.response?.data?.message || err.message || "Something went wrong";
         console.log(errorMessage);
         setError((prev) => ({ ...prev, getAnswerError: errorMessage }));
       })
@@ -93,7 +95,8 @@ function QuestionDetailAndAnswer() {
   const getQuestionDetail = () => {
     setLoading(true);
     setError({
-      ...error, getQuestionDetailError: null,
+      ...error,
+      getQuestionDetailError: null,
     });
     axios
       .get(`/question/${question_id}`, {
@@ -103,10 +106,10 @@ function QuestionDetailAndAnswer() {
       })
       .then((res) => {
         setQuestionDetail(res.data.question);
-        
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || err.message || "Something went wrong";
+        const errorMessage =
+          err.response?.data?.message || err.message || "Something went wrong";
         console.log(errorMessage);
         setError((prev) => ({ ...prev, getQuestionDetailError: errorMessage }));
       })
@@ -115,13 +118,11 @@ function QuestionDetailAndAnswer() {
       });
   };
 
-  // Load question detail and answers when component mounts
   useEffect(() => {
     getQuestionDetail();
     getAllAnswers();
   }, [question_id]);
 
-  
   if (response) {
     return (
       <div className={styles.success__msg}>
@@ -132,6 +133,7 @@ function QuestionDetailAndAnswer() {
       </div>
     );
   }
+
   return (
     <LayOut>
       <div className={styles.outer__container}>
@@ -139,7 +141,7 @@ function QuestionDetailAndAnswer() {
           <h3 className={styles.title}>Question</h3>
 
           {questionDetail ? (
-            <> 
+            <>
               <p className={styles.Qtitle}>{questionDetail.question_title}</p>
               <p>{questionDetail.question_description}</p>
             </>
@@ -154,7 +156,8 @@ function QuestionDetailAndAnswer() {
           <hr />
           <div className={styles.answers_container}>
             {error.getAnswerError ? (
-              <p>{error?.getAnswerError}</p>) : answersForQuestion.length === 0 ? (
+              <p>{error?.getAnswerError}</p>
+            ) : answersForQuestion.length === 0 ? (
               <p>No answers yet. Be the first to answer!</p>
             ) : (
               answersForQuestion.map((answerItem) => (
