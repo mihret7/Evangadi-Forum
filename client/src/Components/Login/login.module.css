@@ -133,12 +133,21 @@
   cursor: pointer;
 }
 
+.errorMessage{
+    color: red;
+    background-color: rgb(255, 235, 238);
+    font-size: 14px;
+    margin: 10px;
+    border: 1px solid var(--error);
+    box-shadow: 0 0 5px rgba(247, 111, 134, 0.5);
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .loginContainer {
-    padding: 30px 20px;
-    max-width: 95vw;
-  }
+  
   .formGroup input {
     font-size: 1.4rem;
     padding: 7px;
