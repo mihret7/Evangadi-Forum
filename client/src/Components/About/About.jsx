@@ -3,6 +3,16 @@ import React from "react";
 import styles from "./About.module.css";
 
 function About() {
+
+  // This toggles the visibility of the "How It Works" section
+  const handleHowItWorks = (e) => {
+
+    const section = document.querySelector(`.${styles.how_it_works_section}`);
+    // Toggle the 'show' class to display or hide the section
+    section.classList.toggle(styles.show);
+
+  };
+
   return (
     <>
       <div className={styles.about_section}>
@@ -27,7 +37,35 @@ function About() {
           you need but also help build a stronger, more knowledgeable community
           for everyone.
         </p>
-        <button className={styles.how_it_works_btn}>HOW IT WORKS</button>
+        <button className={styles.how_it_works_btn} onClick={handleHowItWorks}>
+          HOW IT WORKS
+        </button>
+
+        <div className={styles.how_it_works_section}>
+
+          <h2>How It Works</h2>
+
+          <div className={styles.steps}>
+            
+            <div className={styles.step}>
+              <h3>1. Ask Questions</h3>
+              <p>Post your questions about any topic you need help with.</p>
+            </div>
+
+            <div className={styles.step}>
+              <h3>2. Get Answers</h3>
+              <p>Receive answers from our community of experts and members.</p>
+            </div>
+
+            <div className={styles.step}>
+              <h3>3. Share Knowledge</h3>
+              <p>Help others by sharing your expertise and experiences.</p>
+            </div>
+
+          
+          </div>
+
+        </div>
       </div>
     </>
   );
