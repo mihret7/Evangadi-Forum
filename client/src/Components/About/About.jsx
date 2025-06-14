@@ -51,6 +51,7 @@ function About() {
               <h3>1. Ask Questions</h3>
               <p>Post your questions about any topic you need help with.</p>
             </div>
+            
 
             <div className={styles.step}>
               <h3>2. Get Answers</h3>
