@@ -72,13 +72,13 @@ function QuestionDetailAndAnswer() {
       ...error, getAnswerError: null
     });
     axios
-      .get(`/answer/${question_id}`, {
+      .get(`/answers/${question_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        setAllQuestionAnswers(res.data);
+        setAllQuestionAnswers(res.data.answers);
       })
       .catch((err) => {
         const errorMessage = err.response?.data?.message || err.message || "Something went wrong";
