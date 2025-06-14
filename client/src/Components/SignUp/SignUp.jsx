@@ -60,7 +60,7 @@ function SignUp() {
       navigate("/home");
       // TODO: Store token in local storage or context
       // On successful sign up
-      console.log(response)
+      console.log(response);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem(
         "user",
@@ -76,7 +76,7 @@ function SignUp() {
         username: response.data.username,
         email: response.data.email,
       });
-      
+
       // TODO: Clear form data
       setFormData({
         email: "",
