@@ -61,7 +61,6 @@ function About() {
               <h3>3. Share Knowledge</h3>
               <p>Help others by sharing your expertise and experiences.</p>
             </div>
-
           
           </div>
 
