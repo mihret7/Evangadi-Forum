@@ -17,7 +17,6 @@ function QuestionDetailAndAnswer() {
 
   const [answer, setAnswer] = useState({
     user_id: userData?.userid,
-
     question_id,
     answer: "",
   });
@@ -43,20 +42,30 @@ function QuestionDetailAndAnswer() {
   const [successAnswer, setSuccessAnswer] = useState(false);
   const [answerSort, setAnswerSort] = useState("recent");
 
-  const submitAnswer = (e) => {
-    console.log(answer);
+  const handleSubmitAnswer = (e) => {
     e.preventDefault();
+    
+    if (!token) {
+      toast.error("Please log in to post your answer", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    if (!answer.answer.trim()) {
+      toast.error("Please write your answer before posting", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     setLoading(true);
     setError({
       ...error,
       postAnswerError: null,
     });
-
-    if (!token) {
-      setLoading(false);
-      toast.error("Login to post answer");
-      return;
-    }
 
     axios
       .post("/answer", answer, {
@@ -68,6 +77,7 @@ function QuestionDetailAndAnswer() {
         setResponse(res.data);
         getAllAnswers();
         setSuccessAnswer(true);
+        setAnswer({ ...answer, answer: "" });
         toast.success("Answer Posted Successfully");
       })
       .catch((err) => {
@@ -330,13 +340,13 @@ function QuestionDetailAndAnswer() {
         <div className={styles.answer__box}>
           <h3 className={styles.title}>Answer the Top Question</h3>
           <Link to="/home">Go to Question page</Link>
-          <form onSubmit={submitAnswer} className={styles.answerform}>
+          <form onSubmit={handleSubmitAnswer} className={styles.answerform}>
             <textarea
               name="answer"
               id="answer"
               placeholder="Your answer here"
               onChange={handleChange}
-              value={successAnswer ? "" : answer.answer}
+              value={answer.answer}
               required
             ></textarea>
             {error?.postAnswerError && (
@@ -345,9 +355,9 @@ function QuestionDetailAndAnswer() {
             <button
               type="submit"
               className={styles.answerBtn}
-              disabled={!userData || !token}
+              disabled={loading}
             >
-              Post your Answer
+              {loading ? "Posting..." : "Post your Answer"}
             </button>
           </form>
         </div>
