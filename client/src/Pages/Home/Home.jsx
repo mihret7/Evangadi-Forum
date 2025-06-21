@@ -10,6 +10,7 @@ import { ClipLoader } from "react-spinners";
 import getTimeDifference from "../../Utility/helpers";
 import VoteButtons from "../../Components/VoteButtons/VoteButtons";
 import { toast } from "react-toastify";
+import { useOnlineStatus } from "../../Components/Context/OnlineStatusContext";
 
 function Home() {
   const { userData, setUserData } = useContext(UserContext);
@@ -27,12 +28,12 @@ function Home() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const token = userData?.token;
+  const isOnline = useOnlineStatus();
 
   const handleAskQuestion = () => {
     if (!token || !userData?.userid) {
-      navigate("/landing", {
-        state: { message: "Please login to ask a question" },
-      });
+      toast.warn("Please login to ask a question");
+      return;
     } else {
       navigate("/ask-questions");
     }
@@ -40,7 +41,21 @@ function Home() {
 
   useEffect(() => {
     setLoading(true);
-    // Fetch questions from the API
+    if (!isOnline) {
+      // Offline: Load from cache
+      const cached = localStorage.getItem("cached_questions");
+      if (cached) {
+        const { questions, pagination } = JSON.parse(cached);
+        setQuestions(questions || []);
+        setPagination(pagination || { total: 0, page: 1, pageSize: 5, totalPages: 1 });
+      } else {
+        setQuestions([]);
+        setPagination({ total: 0, page: 1, pageSize: 5, totalPages: 1 });
+      }
+      setLoading(false);
+      return;
+    }
+    // Online: Fetch from API
     axios
       .get(
         `/question?page=${page}&pageSize=${pageSize}&sort=${sort}&search=${encodeURIComponent(
@@ -58,6 +73,19 @@ function Home() {
               totalPages: 1,
             }
           );
+          // Cache the questions and pagination
+          localStorage.setItem(
+            "cached_questions",
+            JSON.stringify({
+              questions: res.data.questions,
+              pagination: res.data.pagination || {
+                total: 0,
+                page: 1,
+                pageSize: 5,
+                totalPages: 1,
+              },
+            })
+          );
         } else {
           setQuestions([]);
           setPagination({ total: 0, page: 1, pageSize: 5, totalPages: 1 });
@@ -74,10 +102,14 @@ function Home() {
       .finally(() => {
         setLoading(false);
       });
-  }, [page, pageSize, sort, search]);
+  }, [page, pageSize, sort, search, isOnline]);
 
   //  Vote handle
   const handleVote = async (question_id, action) => {
+    if (!isOnline) {
+      toast.error("You must be online to vote.");
+      return;
+    }
     if (!token) {
       toast.error("Please log in to vote.", {
         position: "top-right",

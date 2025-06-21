@@ -6,11 +6,13 @@ import logo from "../../assets/imgs/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context";
 import { toast } from "react-toastify";
+import { useOnlineStatus } from "../Context/OnlineStatusContext";
 
 const Header = () => {
   const [mobile, setMobile] = useState(false);
   const { userData, setUserData } = useContext(UserContext);
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
 
   const toggleMobile = () => {
     setMobile((prev) => !prev);
@@ -57,6 +59,14 @@ const Header = () => {
           <div className={styles.menu_toggle} onClick={toggleMobile}>
             {mobile ? "✕" : "☰"}
           </div>
+        </div>
+        <div className={styles.onlineStatus}>
+          <span
+            className={isOnline ? styles.onlineDot : styles.offlineDot}
+          ></span>
+          <span style={{ color: isOnline ? "#4caf50" : "#f44336" }}>
+            {isOnline ? "Online" : "Offline"}
+          </span>
         </div>
       </header>
     </section>

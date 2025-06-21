@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import styles from "./askQuestions.module.css";
 import axios from "../../Utility/axios";
@@ -6,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LayOut from "../../Components/Layout/Layout";
 import { UserContext } from "../../Components/Context";
 import { toast } from "react-toastify";
+import { useOnlineStatus } from "../../Components/Context/OnlineStatusContext";
 
 function AskQuestions() {
   const { userData, setUserData, loadingAuth } = useContext(UserContext);
@@ -13,6 +13,7 @@ function AskQuestions() {
   const navigate = useNavigate();
   const [initialAuthCheckComplete, setInitialAuthCheckComplete] =
     useState(false);
+  const isOnline = useOnlineStatus();
 
   const [question, setQuestion] = useState({
     title: "",
@@ -73,6 +74,10 @@ function AskQuestions() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isOnline) {
+      toast.error("You must be online to post a question.");
+      return;
+    }
     setLoading(true);
     setError(null);
 

@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
+// Used to access shared data like userData globally from a central UserContext.
 import styles from "./login.module.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+// useLocation  tells current route, often useful when redirecting back after login.
 import api from "../../Utility/axios";
 import { UserContext } from "../Context";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { useOnlineStatus } from "../Context/OnlineStatusContext";
 
 function Login() {
-  const location = useLocation();
+  const location = useLocation(); //Gets the current route's location info.
   const { userData, setUserData } = useContext(UserContext);
+  // Pulls in the current user data (userData) and a function to update it (setUserData).
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,6 +22,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,16 +32,42 @@ function Login() {
     }));
     if (error) setError("");
   };
+  // Case 1: Typing in Email Input
+  // name = "email";
+  // value = "hakim@example.com";
+
+  // setFormData((prev) => ({
+  //   ...prev, // { email: "", password: "" }
+  //   email: "hakim@example.com",
+  // }));
+
+  //result
+  // formData = { email: "hakim@example.com", password: "" };
+
+  // Case 2: Typing in Password Input
+  // name = "password";
+  // value = "123456";
+  // setFormData((prev) => ({
+  //   ...prev, // { email: "hakim@example.com", password: "" }
+  //   password: "123456",
+  // }));
+
+  //result
+  // formData = { email: "hakim@example.com", password: "123456" };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isOnline) {
+      toast.error("You must be online to log in.");
+      return;
+    }
     setLoading(true);
-    setError(""); // Clear previous inline errors
+    setError(""); // Clear previous inline errors like invalid email or password
 
     // Basic validation
     if (!formData.email) {
       toast.warn("Please enter your email.");
-      setLoading(false);
+      setLoading(false); //spinner will not be shown the above warning will be shown
       return;
     }
     if (!formData.password) {
@@ -45,6 +76,10 @@ function Login() {
       return;
     }
 
+    // formData contains:
+    // email: "hakim@example.com"
+    // password: "123456"
+    // Now we can send formData to the server endpoint for login
     try {
       const response = await api.post("/user/login", formData);
 
@@ -55,6 +90,15 @@ function Login() {
         token: response.data.token,
         firstname: response.data.first_name,
       });
+      // Assuming the response structure is like this:
+      // {
+      //   "userid": 5,
+      //   "username": "hakimchu",
+      //   "email": "hakim@example.com",
+      //   "token": "eyJhbGciOiJIUzI1NiIsInR...",
+      //   "first_name": "Hakim"
+      // }
+      // Once this is saved to context, any page using useContext(UserContext) now has access to this user!
 
       navigate("/home");
       toast.success("Logged in successfully!");
@@ -77,6 +121,7 @@ function Login() {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+  // Flips showPassword
 
   return (
     <div className={styles.loginContainer}>
@@ -108,6 +153,8 @@ function Login() {
           <div className={styles.passwordInputWrapper}>
             <input
               type={showPassword ? "text" : "password"}
+              // false          type="password"           Masked (••••••)
+              // true            type="text"              Visible (abc123)
               id="password"
               name="password"
               value={formData.password}
@@ -118,9 +165,11 @@ function Login() {
             />
             <span
               className={styles.passwordToggle}
-              onClick={togglePasswordVisibility}
+              onClick={togglePasswordVisibility} //which changes the value of showPassword
             >
               {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+              {/* false             <FiEye />              // Show password icon
+                  true                 <FiEyeOff />              // Hide password icon */}
             </span>
           </div>
         </div>
@@ -128,8 +177,19 @@ function Login() {
           type="submit"
           className={styles.submitButton}
           disabled={loading}
+          // setLoading(true) is called
+          // This makes disabled={true}, which:
+          // Prevents multiple clicks
+          // Prevents sending the form again
+          // Shows a loader (Logging in... text with spinner)
         >
           {loading ? (
+            // If loading is true, render the span block
+            // If loading is false, render "Submit" text   Initial Render (loading = false): User sees: "Submit"
+
+            // After Clicking Submit (loading = true):
+            // This replaces "Submit" with: 	Ensures spinner and  Logging in... are centered & aligned
+
             <span
               style={{
                 display: "flex",

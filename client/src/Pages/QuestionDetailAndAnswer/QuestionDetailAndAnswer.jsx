@@ -8,12 +8,14 @@ import { UserContext } from "../../Components/Context";
 import getTimeDifference from "../../Utility/helpers";
 import VoteButtons from "../../Components/VoteButtons/VoteButtons";
 import { toast } from "react-toastify";
+import { useOnlineStatus } from "../../Components/Context/OnlineStatusContext";
 
 function QuestionDetailAndAnswer() {
   const { userData, setUserData } = useContext(UserContext);
   const token = userData?.token;
   const { question_id } = useParams();
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
 
   const [answer, setAnswer] = useState({
     user_id: userData?.userid,
@@ -44,7 +46,10 @@ function QuestionDetailAndAnswer() {
 
   const handleSubmitAnswer = (e) => {
     e.preventDefault();
-    
+    if (!isOnline) {
+      toast.error("You must be online to post an answer.");
+      return;
+    }
     if (!token) {
       toast.error("Please log in to post your answer", {
         position: "top-right",
@@ -92,6 +97,10 @@ function QuestionDetailAndAnswer() {
 
   // Vote handler
   const handleVote = async (type, id, action) => {
+    if (!isOnline) {
+      toast.error("You must be online to vote.");
+      return;
+    }
     if (!token) {
       toast.error("Please log in to vote.", {
         position: "top-right",
@@ -135,6 +144,20 @@ function QuestionDetailAndAnswer() {
       ...error,
       getAnswerError: null,
     });
+    if (!isOnline) {
+      // Offline: Load answers from cache
+      const cached = localStorage.getItem(`cached_answers_${question_id}`);
+      if (cached) {
+        const { answers, pagination } = JSON.parse(cached);
+        setAllQuestionAnswers(answers || []);
+        setAnswerPagination(pagination || { total: 0, page: 1, pageSize: 5, totalPages: 1 });
+      } else {
+        setAllQuestionAnswers([]);
+        setAnswerPagination({ total: 0, page: 1, pageSize: 5, totalPages: 1 });
+      }
+      setLoading(false);
+      return;
+    }
     axios
       .get(
         `/answer/${question_id}?page=${answerPage}&pageSize=${answerPageSize}&sort=${answerSort}`,
@@ -155,14 +178,22 @@ function QuestionDetailAndAnswer() {
               totalPages: 1,
             }
           );
+          // Cache the answers and pagination
+          localStorage.setItem(
+            `cached_answers_${question_id}`,
+            JSON.stringify({
+              answers: res.data.answers,
+              pagination: res.data.pagination || {
+                total: 0,
+                page: 1,
+                pageSize: 5,
+                totalPages: 1,
+              },
+            })
+          );
         } else {
           setAllQuestionAnswers([]);
-          setAnswerPagination({
-            total: 0,
-            page: 1,
-            pageSize: 5,
-            totalPages: 1,
-          });
+          setAnswerPagination({ total: 0, page: 1, pageSize: 5, totalPages: 1 });
         }
       })
       .catch((err) => {
@@ -183,6 +214,17 @@ function QuestionDetailAndAnswer() {
       ...error,
       getQuestionDetailError: null,
     });
+    if (!isOnline) {
+      // Offline: Load question detail from cache
+      const cached = localStorage.getItem(`cached_question_detail_${question_id}`);
+      if (cached) {
+        setQuestionDetail(JSON.parse(cached));
+      } else {
+        setQuestionDetail(null);
+      }
+      setLoading(false);
+      return;
+    }
     axios
       .get(`/question/${question_id}`, {
         headers: {
@@ -191,6 +233,11 @@ function QuestionDetailAndAnswer() {
       })
       .then((res) => {
         setQuestionDetail(res.data.question);
+        // Cache the question detail
+        localStorage.setItem(
+          `cached_question_detail_${question_id}`,
+          JSON.stringify(res.data.question)
+        );
       })
       .catch((err) => {
         const errorMessage =

@@ -6,6 +6,7 @@ import axios from "../../Utility/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context";
 import { toast } from "react-toastify";
+import { useOnlineStatus } from "../Context/OnlineStatusContext";
 
 function SignUp() {
   const { userData, setUserData } = useContext(UserContext);
@@ -20,6 +21,7 @@ function SignUp() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -44,6 +46,10 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isOnline) {
+      toast.error("You must be online to register.");
+      return;
+    }
     const newErrors = {};
     if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
       newErrors.email = "Please enter a valid email address.";
