@@ -12,10 +12,7 @@ const app = express();
 // middlewares
 app.use(
   cors({
-    origin: [
-      "https://evangadi-forum-bz14r5p64-mihrets-projects-efb53c26.vercel.app/",
-      "http://localhost:5173",
-    ],
+    origin: ["evangadi-forum-mihret.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
