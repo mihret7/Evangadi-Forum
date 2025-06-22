@@ -65,18 +65,17 @@ const profileRoutes = require("./routes/profileRoutes");
 app.use("/api/profile", authMiddleware, profileRoutes);
 
 // Start server and test database connection
-async function startServer() {
+async function connectDB() {
   try {
     await dbconnection.execute("SELECT 'test'");
-    app.listen(process.env.PORT || 5400, () => {
-      console.log(
-        `Server is running on: http://localhost:${process.env.PORT || 5400}`
-      );
-      console.log("Database connection successful");
-    });
+    console.log("Database connection successful");
   } catch (error) {
     console.error("Error connecting to the database:", error.message);
   }
 }
 
-startServer();
+const PORT = process.env.PORT || 5400;
+app.listen(PORT, async () => {
+  console.log(`Server is running on: http://localhost:${PORT}`);
+  await connectDB();
+});
