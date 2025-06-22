@@ -13,7 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://evangadi-forum-aui3680mo-mihrets-projects-efb53c26.vercel.app",
+      "https://evangadi-forum-bz14r5p64-mihrets-projects-efb53c26.vercel.app/",
       "http://localhost:5173",
     ],
     credentials: true,
