@@ -25,6 +25,3 @@ const dbconnection = process.env.DATABASE_URL
 // const { rows } = await dbconnection.query('SELECT NOW()');
 
 module.exports = dbconnection;
-
-
-
