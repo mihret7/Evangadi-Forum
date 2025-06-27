@@ -16,7 +16,7 @@ function Home() {
   const [questions, setQuestions] = useState([]);
   const [loadingQuestions, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(20);
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -28,9 +28,6 @@ function Home() {
   const navigate = useNavigate();
   const token = userData?.token;
 
-
-
-
   const handleAskQuestion = () => {
     if (!token || !userData?.userid) {
       navigate("/landing", {
@@ -40,9 +37,6 @@ function Home() {
       navigate("/ask-questions");
     }
   };
-
-
-
 
   useEffect(() => {
     setLoading(true);
@@ -82,11 +76,6 @@ function Home() {
       });
   }, [page, pageSize, sort, search]);
 
-
-
-
-
-  
   //  Vote handle
   const handleVote = async (question_id, action) => {
     if (!token) {
@@ -200,6 +189,7 @@ function Home() {
                 loading={loadingQuestions}
                 size={50}
               />
+              <p>Loading questions . . .</p>
             </div>
           ) : questions.length === 0 ? (
             <p className={styles.no_questions_message}>
@@ -212,43 +202,77 @@ function Home() {
                   key={q.question_id}
                   className={styles.question_item_wrapper}
                 >
-                  <Link
-                    to={`/question-detail/${q.question_id}`}
-                    className={styles.link_container}
-                  >
-                    <div className={styles.user_container}>
-                      <div className={styles.user_question}>
+                  <div className={styles.user_container}>
+                    <div className={styles.user_question}>
+                      <Link
+                        to={`/profile/${q.user_uuid}`}
+                        style={{
+                          color: "var(--text-dark)",
+                          textDecoration: "none",
+                        }}
+                      >
                         <div className={styles.usericon_and_username}>
                           <div className={styles.inner_center}>
                             <FaUserCircle
                               size={80}
                               className={styles.usericon}
                             />
-                            <span>
-                              {q.user_id === userData?.userid ? "You" : "@" + q.user_name}
-                            </span>
+                            <div style={{ textAlign: "center" }}>
+                              <span>{"@" + q.user_name}</span>
+                              {q.user_id === userData?.userid && (
+                                <div
+                                  style={{ fontSize: "0.9em", color: "#555" }}
+                                >
+                                  (You)
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className={styles.Qbox}>
+                      </Link>
+                      <div>
+                        <div className={styles.Qbox}>
+                          <Link
+                            to={`/question-detail/${q.question_uuid}`}
+                            style={{
+                              color: "var(--text-dark)",
+                              textDecoration: "none",
+                            }}
+                          >
                             <p className={styles.Qtitle}>{q.question_title}</p>
-                            <p className={styles.timestamp_title}>
-                              {getTimeDifference(q.created_at)}
-                            </p>
+                          </Link>
+                          <div className={styles.timeandvote}>
+                            <Link
+                              to={`/question-detail/${q.question_uuid}`}
+                              style={{
+                                color: "var(--text-dark)",
+                                textDecoration: "none",
+                              }}
+                            >
+                              <p className={styles.timestamp_title}>
+                                {getTimeDifference(q.created_at)}
+                              </p>
+                            </Link>
+                            <div className={styles.vote_section}>
+                              <VoteButtons
+                                likes={q.likes ?? 0}
+                                dislikes={q.dislikes ?? 0}
+                                userVote={q.user_vote_type}
+                                onVote={(action) =>
+                                  handleVote(q.question_id, action)
+                                }
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <FaChevronRight size={20} className={styles.chevron} />
                     </div>
-                  </Link>
-
-                  <div className={styles.vote_section}>
-                    <VoteButtons
-                      likes={q.likes ?? 0}
-                      dislikes={q.dislikes ?? 0}
-                      userVote={q.user_vote_type}
-                      onVote={(action) => handleVote(q.question_id, action)}
-                    />
+                    <Link
+                      to={`/question-detail/${q.question_uuid}`}
+                      style={{ color: "var(--text-dark)" }}
+                    >
+                      <FaChevronRight size={20} className={styles.chevron} />
+                    </Link>
                   </div>
                 </div>
               ))}

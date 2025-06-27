@@ -10,7 +10,7 @@ import { ClipLoader } from "react-spinners";
 function AskQuestions() {
   const { userData } = useContext(UserContext);
   const token = userData?.token;
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
   const [question, setQuestion] = useState({
     title: "",
     description: "",
@@ -33,6 +33,14 @@ function AskQuestions() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // Client-side validation
+    if (question.title.length > 500) {
+      setError("Title cannot be more than 500 characters.");
+      toast.error("Title cannot be more than 500 characters.");
+      setLoading(false);
+      return;
+    }
 
     // Ensure user is authenticated before posting
     if (!token || !userData?.userid) {
@@ -60,9 +68,21 @@ function AskQuestions() {
         position: "top-right",
         autoClose: 3000,
       });
+      navigate("/home");
     } catch (error) {
       if (error.response?.status === 401) {
         navigate("/landing");
+      } else if (
+        error.response?.data?.sqlMessage?.includes(
+          "Data too long for column 'question_title'"
+        )
+      ) {
+        setError(
+          "Title is too long. Please use a title with 500 characters or less."
+        );
+        toast.error(
+          "Title is too long. Please use a title with 500 characters or less."
+        );
       } else if (
         error.response?.status === 400 &&
         error.response?.data?.message === "Tag must be 20 characters or less"

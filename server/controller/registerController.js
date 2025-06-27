@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
 const dbConnection = require("../db/db.Config");
 const xss = require("xss");
+const { v4: uuidv4 } = require("uuid");
 
 async function register(req, res) {
   try {
@@ -38,11 +39,10 @@ async function register(req, res) {
     const sanitizedEmail = xss(email);
 
     // Check for existing user
-    const [existing] = await dbConnection.query(
-      "SELECT * FROM registration WHERE user_name = ? OR user_email = ?",
+    const { rows: existing } = await dbConnection.query(
+      "SELECT * FROM registration WHERE user_name = $1 OR user_email = $2",
       [sanitizedUsername, sanitizedEmail]
     );
-    // return res.json({username: username})
     if (existing.length > 0) {
       return res
         .status(StatusCodes.CONFLICT) // 409
@@ -52,28 +52,41 @@ async function register(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Generate UUID for the new user
+    const userUuid = uuidv4();
+
     // Insert user into registration table
-    const [result] = await dbConnection.query(
-      "INSERT INTO registration (user_name, user_email, password) VALUES (?, ?, ?)",
-      [sanitizedUsername, sanitizedEmail, hashedPassword]
-    );
+    const insertUserQuery =
+      "INSERT INTO registration (user_name, user_email, password, user_uuid) VALUES ($1, $2, $3, $4) RETURNING user_id";
+    const { rows: userRows } = await dbConnection.query(insertUserQuery, [
+      sanitizedUsername,
+      sanitizedEmail,
+      hashedPassword,
+      userUuid,
+    ]);
+    const userId = userRows[0].user_id;
 
     // Insert into profile table
     await dbConnection.query(
-      "INSERT INTO profile (user_id, first_name, last_name) VALUES (?, ?, ?)",
-      [result.insertId, sanitizedFirstName, sanitizedLastName]
+      "INSERT INTO profile (user_id, first_name, last_name) VALUES ($1, $2, $3)",
+      [userId, sanitizedFirstName, sanitizedLastName]
     );
 
     // Generate JWT
     const token = jwt.sign(
-      { userid: result.insertId, username: sanitizedUsername },
+      {
+        userid: userId,
+        username: sanitizedUsername,
+        user_uuid: userUuid,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "30d" }
     );
     res.status(StatusCodes.CREATED).json({
       message: "User registered successfully",
-      userid: result.insertId,
+      userid: userId,
       username: sanitizedUsername,
+      user_uuid: userUuid,
       email: sanitizedEmail,
       first_name: sanitizedFirstName,
       token,

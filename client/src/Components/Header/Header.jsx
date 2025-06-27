@@ -44,16 +44,16 @@ const Header = () => {
             <Link to="/home">Home</Link>
             <Link to="#">How it works</Link>
 
-            {userData?.userid ? (
+            {userData?.token ? (
               <div className={styles.user_actions}>
                 <Link
-                  to={`/profile/${userData.userid}`}
+                  to={`/profile/${userData.user_uuid}`}
                   className={styles.profile_link}
                 >
                   <div className={styles.profile_icon}>
                     {" "}
                     {/* Wrapper div for styling */}
-                    <FaUserCircle size={60} />
+                    <FaUserCircle size={50} />
                   </div>
                 </Link>
                 <button onClick={logout} className={styles.sign_in_btn}>

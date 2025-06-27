@@ -20,19 +20,20 @@ const handleError = (res, message = "An unexpected error occurred.", error) => {
  * @param {string} userId - The ID of the user to fetch.
  * @returns {Promise<object|null>} The user's profile data or null if not found.
  */
-const fetchUserProfile = async (userId) => {
+const fetchUserProfile = async (userUuid) => {
   const query = `
     SELECT 
       r.user_id, 
+      r.user_uuid,
       r.user_name, 
       r.user_email, 
       COALESCE(p.first_name, '') as first_name, 
       COALESCE(p.last_name, '') as last_name
     FROM registration r
     LEFT JOIN profile p ON r.user_id = p.user_id
-    WHERE r.user_id = ?;
+    WHERE r.user_uuid = $1;
   `;
-  const [rows] = await db.execute(query, [userId]);
+  const { rows } = await db.query(query, [userUuid]);
   return rows[0];
 };
 
@@ -43,7 +44,7 @@ const fetchUserProfile = async (userId) => {
  */
 exports.getProfile = async (req, res) => {
   try {
-    const profile = await fetchUserProfile(req.params.user_id);
+    const profile = await fetchUserProfile(req.params.user_uuid);
 
     if (!profile) {
       return res.status(404).json({ message: "User not found" });
@@ -59,49 +60,53 @@ exports.getProfile = async (req, res) => {
  * UPDATE a user's profile and registration info.
  */
 exports.updateProfile = async (req, res) => {
-  const { user_id } = req.params;
+  const { user_uuid } = req.params; // Use user_uuid from URL
+  const authenticatedUserId = req.user.userid; // Use authenticated user's ID from token
+
   const { first_name, last_name, user_name } = req.body;
 
-  const client = await db.getConnection(); // to use transactions
+  const client = await db.connect();
 
   try {
-    await client.beginTransaction();
+    await client.query("BEGIN");
 
-    // Update registration table
-    await client.query(
-      "UPDATE registration SET user_name = ? WHERE user_id = ?",
-      [user_name, user_id]
+    // First, verify that the user_uuid from the URL corresponds to the authenticated user
+    const { rows: userRows } = await client.query(
+      "SELECT user_id FROM registration WHERE user_uuid = $1",
+      [user_uuid]
     );
 
-    // Upsert profile table
-    const upsertProfileQuery = `
-      INSERT INTO profile (user_id, first_name, last_name)
-      VALUES (?, ?, ?)
-      ON DUPLICATE KEY UPDATE 
-        first_name = VALUES(first_name), 
-        last_name = VALUES(last_name);
-    `;
-    await client.query(upsertProfileQuery, [user_id, first_name, last_name]);
+    if (userRows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    await client.commit();
+    const userId = userRows[0].user_id;
 
-    // Fetch the newly updated profile to return
-    const updatedProfile = await fetchUserProfile(user_id);
+    // Security check: Ensure the authenticated user is the owner of the profile
+    if (userId !== authenticatedUserId) {
+      await client.query("ROLLBACK");
+      return res.status(403).json({ message: "Unauthorized" });
+    }
 
-    res.json({
-      message: "Profile updated successfully",
-      user: {
-        userid: updatedProfile.user_id,
-        username: updatedProfile.user_name,
-        email: updatedProfile.user_email,
-        firstname: updatedProfile.first_name,
-      },
-    });
+    if (user_name) {
+      await client.query(
+        "UPDATE registration SET user_name = $1 WHERE user_id = $2",
+        [user_name, userId]
+      );
+    }
+    await client.query(
+      "UPDATE profile SET first_name = $1, last_name = $2 WHERE user_id = $3",
+      [first_name, last_name, userId]
+    );
+
+    await client.query("COMMIT");
+    res.json({ message: "Profile updated successfully" });
   } catch (err) {
-    await client.rollback();
-    handleError(res, "Update failed.", err);
+    await client.query("ROLLBACK");
+    handleError(res, "Server error while updating profile.", err);
   } finally {
-    client.release(); // Release the client back to the pool
+    client.release();
   }
 };
 
@@ -111,8 +116,8 @@ exports.updateProfile = async (req, res) => {
 exports.deleteProfile = async (req, res) => {
   try {
     const { user_id } = req.params;
-    const result = await db.execute(
-      "DELETE FROM registration WHERE user_id = ?",
+    const result = await db.query(
+      "DELETE FROM registration WHERE user_id = $1",
       [user_id]
     );
 
