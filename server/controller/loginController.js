@@ -4,6 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const dbConnection = require("../db/db.Config");
 const xss = require("xss");
 
+
 //login route implementation FOR already registered users
 async function login(req, res) {
   // Sanitize email and password
